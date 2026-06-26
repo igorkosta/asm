@@ -59,7 +59,7 @@ describe("downloadPackage", () => {
     );
 
     expect(result.integrity).toMatch(/^sha256-/);
-    expect(result.resolved).toContain("fake-pkg/archive/refs/tags/v1.0.0.tar.gz");
+    expect(result.resolved).toContain("fake-pkg/archive/1.0.0.tar.gz");
     expect(existsSync(join(fixtureDest, "asm.json"))).toBe(true);
     expect(existsSync(join(fixtureDest, "skills", "test-skill", "SKILL.md"))).toBe(true);
 
@@ -103,7 +103,7 @@ describe("downloadPackage", () => {
 
     const result = await downloadPackage(
       "https://gitlab.com/devops/fake-pkg",
-      "1.0.0",
+      "v1.0.0",
       fixtureDest,
       "https://gitlab.com/api/v4",
     );

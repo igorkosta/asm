@@ -51,12 +51,11 @@ export function tarballUrl(
   apiBaseUrl?: string,
 ): string {
   const platform = detectPlatform(info.host, apiBaseUrl ?? info.apiBaseUrl);
-  const tag = version.startsWith("v") ? version : `v${version}`;
   const base = `https://${info.host}/${info.owner}/${info.repo}`;
 
   if (platform === "gitlab") {
-    return `${base}/-/archive/${tag}/${tag}.tar.gz`;
+    return `${base}/-/archive/${version}/${version}.tar.gz`;
   }
 
-  return `${base}/archive/refs/tags/${tag}.tar.gz`;
+  return `${base}/archive/${version}.tar.gz`;
 }

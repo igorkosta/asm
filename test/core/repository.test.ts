@@ -90,37 +90,44 @@ describe("detectPlatform", () => {
 });
 
 describe("tarballUrl", () => {
-  it("constructs GitHub tarball URL", () => {
+  it("constructs GitHub tarball URL for tag ref", () => {
     const info = parseRepository("https://github.com/security-team/owasp");
-    expect(tarballUrl(info, "2.1.0")).toBe(
-      "https://github.com/security-team/owasp/archive/refs/tags/v2.1.0.tar.gz",
+    expect(tarballUrl(info, "v2.1.0")).toBe(
+      "https://github.com/security-team/owasp/archive/v2.1.0.tar.gz",
+    );
+  });
+
+  it("constructs GitHub tarball URL for branch ref", () => {
+    const info = parseRepository("https://github.com/owner/repo");
+    expect(tarballUrl(info, "main")).toBe(
+      "https://github.com/owner/repo/archive/main.tar.gz",
+    );
+  });
+
+  it("constructs GitHub tarball URL for tag without v prefix", () => {
+    const info = parseRepository("https://github.com/owner/repo");
+    expect(tarballUrl(info, "0.6.2")).toBe(
+      "https://github.com/owner/repo/archive/0.6.2.tar.gz",
     );
   });
 
   it("constructs GitLab tarball URL", () => {
     const info = parseRepository("https://gitlab.com/devops/audit-tool");
-    expect(tarballUrl(info, "1.0.0")).toBe(
+    expect(tarballUrl(info, "v1.0.0")).toBe(
       "https://gitlab.com/devops/audit-tool/-/archive/v1.0.0/v1.0.0.tar.gz",
-    );
-  });
-
-  it("does not duplicate v prefix", () => {
-    const info = parseRepository("https://github.com/owner/repo");
-    expect(tarballUrl(info, "v1.0")).toBe(
-      "https://github.com/owner/repo/archive/refs/tags/v1.0.tar.gz",
     );
   });
 
   it("uses self-hosted host in URL", () => {
     const info = parseRepository("https://ghe.internal.co/org/tool");
-    expect(tarballUrl(info, "2.0.0")).toBe(
-      "https://ghe.internal.co/org/tool/archive/refs/tags/v2.0.0.tar.gz",
+    expect(tarballUrl(info, "v2.0.0")).toBe(
+      "https://ghe.internal.co/org/tool/archive/v2.0.0.tar.gz",
     );
   });
 
   it("uses gitlab format for self-hosted gitlab with apiBaseUrl hint", () => {
     const info = parseRepository("https://gitlab.internal.co/org/tool");
-    const url = tarballUrl(info, "3.0.0", "https://gitlab.internal.co/api/v4");
+    const url = tarballUrl(info, "v3.0.0", "https://gitlab.internal.co/api/v4");
     expect(url).toBe(
       "https://gitlab.internal.co/org/tool/-/archive/v3.0.0/v3.0.0.tar.gz",
     );
@@ -128,9 +135,9 @@ describe("tarballUrl", () => {
 
   it("uses github format for self-hosted github with apiBaseUrl hint", () => {
     const info = parseRepository("https://ghe.internal.co/org/tool");
-    const url = tarballUrl(info, "1.0.0", "https://ghe.internal.co/api/v3");
+    const url = tarballUrl(info, "v1.0.0", "https://ghe.internal.co/api/v3");
     expect(url).toBe(
-      "https://ghe.internal.co/org/tool/archive/refs/tags/v1.0.0.tar.gz",
+      "https://ghe.internal.co/org/tool/archive/v1.0.0.tar.gz",
     );
   });
 });

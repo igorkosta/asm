@@ -8,12 +8,18 @@ export interface AsmConfig {
   sources: Source[];
 }
 
+export interface SkillEntry {
+  name: string;
+  category?: string;
+}
+
 export interface RegistryEntry {
   description: string;
   latest: string;
   repository: string;
   platforms: string[];
-  skills: string[];
+  skills?: SkillEntry[];
+  skillCount?: number;
 }
 
 export type RegistryIndex = Record<string, RegistryEntry>;

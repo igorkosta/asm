@@ -16,7 +16,7 @@ A CLI package manager for AI agent skills, modeled after npm. Packages bundle on
 | Single-skill packages | Always `pkg/skill` path (no alias) |
 | Manifest field | `"platforms": ["opencode", "pi", "claude"]` |
 | Registry versions | Only `latest` (MVP); expand later |
-| Version resolution | Direct tarball URL construction (`v{version}` tag convention) — no Releases API |
+| Version resolution | Direct tarball URL construction — `latest` is the exact ref name (tag, branch, or SHA) — no Releases API |
 | Lockfile | JSON (`asm-lock.json`) |
 | Registry cache | Always fresh |
 | .gitignore | Auto-managed (like npm) |
@@ -62,6 +62,8 @@ Global installs require `--agent <name>`. Config resolution: `ASM_AGENT` env var
 
 Managed via `asm source list|add|remove`.
 
+**Default registry:** `asm` ships with a built-in `src/registry/default-registry.json` containing curated community packages. When no sources are configured, `fetchRegistry()` returns this built-in index — no setup required to start searching.
+
 ---
 
 ## Package structure
@@ -88,12 +90,18 @@ Managed via `asm source list|add|remove`.
     "latest": "2.1.0",
     "repository": "https://github.com/security-team/owasp",
     "platforms": ["opencode"],
-    "skills": ["sast-analysis", "sqli-detection", "xss-detection"]
+    "skills": [
+      { "name": "sast-analysis", "category": "security" },
+      { "name": "sqli-detection", "category": "security" },
+      { "name": "xss-detection", "category": "security" }
+    ]
   }
 }
 ```
 
 `repository` is a full URL: `https://github.com/{owner}/{repo}`, `https://gitlab.com/{owner}/{repo}`, or any self-hosted URL.
+
+`skills` is optional — aggregator packages may omit it and use `skillCount` instead. Each skill has a `name` and optional `category` for searchability.
 
 ---
 
@@ -122,8 +130,8 @@ Managed via `asm source list|add|remove`.
 
 | Platform | Tarball URL pattern |
 |----------|---------------------|
-| GitHub (cloud or self-hosted) | `{host}/{owner}/{repo}/archive/refs/tags/v{version}.tar.gz` |
-| GitLab (cloud or self-hosted) | `{host}/{owner}/{repo}/-/archive/v{version}/v{version}.tar.gz` |
+| GitHub (cloud or self-hosted) | `{host}/{owner}/{repo}/archive/{ref}.tar.gz` — ref can be tag, branch, or SHA |
+| GitLab (cloud or self-hosted) | `{host}/{owner}/{repo}/-/archive/{ref}/{ref}.tar.gz` — ref can be tag, branch, or SHA |
 
 No Releases API calls needed. The tarball URL is constructed directly from the repository URL + version tag.
 
@@ -181,10 +189,10 @@ Location: project root for local installs, agent config dir for global installs.
 
 | # | Module | Status | What it does |
 |---|--------|--------|--------------|
-| 1 | `types/index.ts` | **Done** | TypeScript interfaces for `asm.json`, registry, lockfile, config, source, repository |
+| 1 | `types/index.ts` | **Done** | TypeScript interfaces for `asm.json`, registry, lockfile, config, source, repository, skill entry |
 | 2 | `core/config.ts` | **Done** | Read/write `~/.config/asm/config.json`, source management (add/remove/list), path resolution |
 | 3 | `core/repository.ts` | **Done** | Parse repo URL, detect platform (GitHub/GitLab), construct tarball URL |
-| 4 | `core/registry.ts` | **Done** | Fetch + parse `registry.json` from each source, merge, search |
+| 4 | `core/registry.ts` | **Done** | Fetch + parse `registry.json` from each source, merge, search (by name, description, skill name, category) |
 | 5 | `core/lockfile.ts` | **Done** | Read/write `asm-lock.json` |
 | 6 | `core/installer.ts` | **Done** | Download tarball, verify SHA-256, extract via `tar` |
 | 7 | `core/uninstaller.ts` | **Done** | Remove package/skill files, clean lockfile |
@@ -192,9 +200,9 @@ Location: project root for local installs, agent config dir for global installs.
 | 9 | `commands/source.ts` | **Done** | CLI handler for `source list\|add\|remove` |
 | — | `index.ts` | **Done** | CLI entry point, arg parsing, routing |
 | — | Tests | **Done** | 90 tests across `test/`; vitest + v8 coverage |
-| 10 | `commands/search.ts` | **Not started** | CLI handler for `search` |
+| 10 | `commands/search.ts` | **Done** | CLI handler for `search` — fetches registry, filters by query, shows category breakdown |
 | 11 | `commands/info.ts` | **Not started** | CLI handler for `info` |
-| 12 | `commands/install.ts` | **Not started** | CLI handler for `install` |
+| 12 | `commands/install.ts` | **Done** | CLI handler for `install` — registry lookup, download, extract, lockfile, gitignore |
 | 13 | `commands/uninstall.ts` | **Not started** | CLI handler for `uninstall` |
 | 14 | `commands/list.ts` | **Not started** | CLI handler for `list` |
 | 15 | `commands/init.ts` | **Not started** | Scaffold new package |
@@ -227,11 +235,13 @@ asm/
     core/
       config.ts               # Path detection, agent resolution, source config
       repository.ts           # URL parsing, platform detection, tarball URL construction
-      registry.ts             # Fetch & parse registry index from sources
+      registry.ts             # Fetch & parse registry index from sources (falls back to default)
       lockfile.ts             # Read/write asm-lock.json
       installer.ts            # Download + extract + integrity
       uninstaller.ts          # Remove + clean lockfile
       gitignore.ts            # Auto-manage .gitignore
+    registry/
+      default-registry.json   # Built-in package index (8 curated packages)
     types/
       index.ts                # All TypeScript interfaces
   test/
@@ -247,4 +257,10 @@ asm/
       gitignore.test.ts
     commands/
       source.test.ts
+      install.test.ts      # (not yet)
+      uninstall.test.ts    # (not yet)
+      list.test.ts         # (not yet)
+      search.test.ts       # (not yet)
+      info.test.ts         # (not yet)
+      init.test.ts         # (not yet)
 ```

@@ -1,6 +1,11 @@
-import type { Source, RegistryIndex, RegistryEntry } from "../types/index.js";
+import type { Source, RegistryIndex, RegistryEntry, SkillEntry } from "../types/index.js";
+import defaultRegistry from "../registry/default-registry.json";
 
 export async function fetchRegistry(sources: Source[]): Promise<RegistryIndex> {
+  if (sources.length === 0) {
+    return defaultRegistry as RegistryIndex;
+  }
+
   const merged: RegistryIndex = {};
 
   for (const source of sources) {
@@ -26,6 +31,10 @@ export async function fetchRegistry(sources: Source[]): Promise<RegistryIndex> {
   return merged;
 }
 
+function matchQuery(value: string, query: string): boolean {
+  return value.toLowerCase().includes(query);
+}
+
 export function searchRegistry(
   index: RegistryIndex,
   query: string,
@@ -35,9 +44,23 @@ export function searchRegistry(
 
   for (const [name, entry] of Object.entries(index)) {
     if (
-      name.toLowerCase().includes(q) ||
-      entry.description.toLowerCase().includes(q)
+      matchQuery(name, q) ||
+      matchQuery(entry.description, q)
     ) {
+      results.push({ name, entry });
+      continue;
+    }
+
+    const matched = (entry.skills ?? []).some((skill: string | SkillEntry) => {
+      const skillName = typeof skill === "string" ? skill : skill.name;
+      const category = typeof skill === "string" ? undefined : skill.category;
+      return (
+        matchQuery(skillName, q) ||
+        (category !== undefined && matchQuery(category, q))
+      );
+    });
+
+    if (matched) {
       results.push({ name, entry });
     }
   }

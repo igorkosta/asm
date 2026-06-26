@@ -111,12 +111,13 @@ describe("fetchRegistry", () => {
     );
   });
 
-  it("returns empty object for empty sources", async () => {
+  it("returns default registry for empty sources", async () => {
     global.fetch = mockFetch(validIndex);
     const { fetchRegistry } = await import("../../src/core/registry.js");
 
     const result = await fetchRegistry([]);
-    expect(result).toEqual({});
+    expect(Object.keys(result).length).toBeGreaterThan(0);
+    expect(result["addyosmani-agent-skills"]).toBeDefined();
   });
 });
 
