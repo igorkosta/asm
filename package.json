@@ -2,6 +2,10 @@
   "name": "@igorkosta/asm",
   "version": "0.1.3",
   "description": "Agent Skills Manager — install, update, and manage AI agent skills",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/igorkosta/asm.git"
+  },
   "type": "module",
   "bin": {
     "asm": "./dist/index.js"
