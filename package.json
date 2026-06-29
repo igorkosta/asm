@@ -1,0 +1,37 @@
+{
+  "name": "ags-cli",
+  "version": "0.1.2",
+  "description": "Agent Skills Manager — install, update, and manage AI agent skills",
+  "type": "module",
+  "bin": {
+    "ags": "./dist/index.js"
+  },
+  "files": [
+    "dist/"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "commander": "^15.0.0",
+    "semver": "^7.8.2",
+    "tar": "^7.5.16"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.2",
+    "@types/semver": "^7.7.1",
+    "@vitest/coverage-v8": "^4.1.8",
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.8"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "license": "MIT"
+}
