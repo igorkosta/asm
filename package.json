@@ -1,10 +1,10 @@
 {
-  "name": "ags-cli",
+  "name": "@igorkosta/asm",
   "version": "0.1.2",
   "description": "Agent Skills Manager — install, update, and manage AI agent skills",
   "type": "module",
   "bin": {
-    "ags": "./dist/index.js"
+    "asm": "./dist/index.js"
   },
   "files": [
     "dist/"

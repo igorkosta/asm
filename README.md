@@ -3,7 +3,7 @@
 Install, search, update, and manage AI agent skills from your terminal.
 
 ```bash
-npm install -g ags-cli
+npm install -g @igorkosta/asm
 ```
 
 ---
