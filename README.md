@@ -1,4 +1,4 @@
-# `ags` — Agent Skills Manager
+# `asm` — Agent Skills Manager
 
 Install, search, update, and manage AI agent skills from your terminal.
 
@@ -12,40 +12,40 @@ npm install -g @igorkosta/asm
 
 ```bash
 # Search the registry
-ags search security
+asm search security
 
 # Install a package
-ags install addyosmani-agent-skills
+asm install addyosmani-agent-skills
 
 # List installed packages
-ags list
+asm list
 ```
 
 ---
 
 ## Command reference
 
-### `ags search <query>`
+### `asm search <query>`
 
 Search the registry for packages. Matches package name, description, skill name, and skill category.
 
 ```bash
-ags search tdd
-ags search security
-ags search anthropic
+asm search tdd
+asm search security
+asm search anthropic
 ```
 
 Output shows matching packages with version, skill count, category breakdown, and the specific skills that matched.
 
 ---
 
-### `ags install <pkg>`
+### `asm install <pkg>`
 
 Install a package (all its skills) locally.
 
 ```bash
-ags install addyosmani-agent-skills
-ags i kayaman-skills                # shorthand alias
+asm install addyosmani-agent-skills
+asm i kayaman-skills                # shorthand alias
 ```
 
 | Flag | Description |
@@ -56,20 +56,20 @@ ags i kayaman-skills                # shorthand alias
 Global install:
 
 ```bash
-ags install microsoft-skills -g --agent opencode
+asm install microsoft-skills -g --agent opencode
 ```
 
 Installed to `./ags_modules/skills/<pkg>/` (local) or `~/.config/<agent>/skills/<pkg>/` (global).
 
 ---
 
-### `ags uninstall <pkg>`
+### `asm uninstall <pkg>`
 
 Remove a package or a specific skill.
 
 ```bash
-ags uninstall addyosmani-agent-skills          # remove entire package
-ags un addyosmani-agent-skills/tdd             # remove one skill only
+asm uninstall addyosmani-agent-skills          # remove entire package
+asm un addyosmani-agent-skills/tdd             # remove one skill only
 ```
 
 | Flag | Description |
@@ -81,37 +81,37 @@ Removes the package from `ags-lock.json` and cleans `.gitignore` when the last l
 
 ---
 
-### `ags list`
+### `asm list`
 
 Show installed packages and their skills.
 
 ```bash
-ags list
-ags ls                          # shorthand alias
-ags list -g                     # global installs
-ags list --agent opencode       # filter by agent
+asm list
+asm ls                          # shorthand alias
+asm list -g                     # global installs
+asm list --agent opencode       # filter by agent
 ```
 
 ---
 
-### `ags info <pkg>`
+### `asm info <pkg>`
 
 Show metadata for a package or a specific skill.
 
 ```bash
-ags info addyosmani-agent-skills                # package overview
-ags info addyosmani-agent-skills/tdd            # single skill detail
+asm info addyosmani-agent-skills                # package overview
+asm info addyosmani-agent-skills/tdd            # single skill detail
 ```
 
 ---
 
-### `ags update [pkg]`
+### `asm update [pkg]`
 
 Update one or all installed packages to the latest version.
 
 ```bash
-ags update addyosmani-agent-skills              # update one package
-ags update                                      # update all packages
+asm update addyosmani-agent-skills              # update one package
+asm update                                      # update all packages
 ```
 
 | Flag | Description |
@@ -123,39 +123,39 @@ Skips packages already at the latest version.
 
 ---
 
-### `ags init [name]`
+### `asm init [name]`
 
 Scaffold a new skill package in the current directory.
 
 ```bash
-ags init my-skills
-ags init --description "My skill collection" --version 0.1.0
+asm init my-skills
+asm init --description "My skill collection" --version 0.1.0
 ```
 
 Creates `ags.json`, `skills/` directory, and a sample skill file.
 
 ---
 
-### `ags publish`
+### `asm publish`
 
 Validate the `ags.json` manifest in the current directory and output a registry entry snippet.
 
 ```bash
-ags publish
+asm publish
 ```
 
 Checks for required fields and verifies that referenced skill entry files exist.
 
 ---
 
-### `ags source`
+### `asm source`
 
 Manage registry sources.
 
 ```bash
-ags source list                     # list configured sources
-ags source add my-index <url>       # add a source
-ags source remove my-index          # remove a source
+asm source list                     # list configured sources
+asm source add my-index <url>       # add a source
+asm source remove my-index          # remove a source
 ```
 
 | Flag | Description |
@@ -214,7 +214,7 @@ Eight curated packages are built-in — nothing to configure to get started:
 | `newmindsgroup-ai-agent-skills-library` | 1,513 | With brand-config.yml and starter packs |
 | `christophacham-agent-skills-library` | 2,622 | Consolidated from 48 sources across 34 categories |
 
-Add more sources with `ags source add` to extend beyond the defaults.
+Add more sources with `asm source add` to extend beyond the defaults.
 
 ---
 
