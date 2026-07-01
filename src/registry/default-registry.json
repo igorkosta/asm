@@ -205,6 +205,26 @@
     "platforms": ["opencode", "claude", "cursor", "copilot", "codex"],
     "skillCount": 1513
   },
+  "superagent-skills": {
+    "description": "Security skills for AI coding agents — distilled from real security work on codebases that serve 100M+ users a week",
+    "latest": "main",
+    "repository": "https://github.com/superagent-ai/skills",
+    "platforms": ["opencode", "claude", "cursor", "copilot", "codex"],
+    "skills": [
+      { "name": "hacker", "description": "Offensive engagement and exploitability validation with phase gates and role handoffs", "category": "security" },
+      { "name": "redteam-autoresearch", "description": "Generate LLM guardrail training data via a bounded red-team loop", "category": "security" },
+      { "name": "ci-cd-security", "description": "Supply-chain and pwn-request bugs in GitHub Actions workflows", "category": "security" },
+      { "name": "repo-security-posture", "description": "GitHub repository hardening and maintainer-facing security todos", "category": "security" },
+      { "name": "skill-security", "description": "Answer whether a skill is safe to install via offline scanner and model judgment", "category": "security" },
+      { "name": "authz-security", "description": "Detect broken access control (IDOR/BOLA) in application code", "category": "security" },
+      { "name": "recon-security", "description": "External pentest workflow with free/open-source tools", "category": "security" },
+      { "name": "supply-chain-security", "description": "Detect malicious or compromised dependencies before they land", "category": "security" },
+      { "name": "security-disclosure-triage", "description": "Reporter-side advisory verification before disclosure", "category": "security" },
+      { "name": "vulnerability-triage", "description": "Determine if an advisory is a real finding, by-design, or noise", "category": "security" },
+      { "name": "crypto-secrets", "description": "Find hardcoded secrets and broken cryptography in application code", "category": "security" },
+      { "name": "infra-security", "description": "Detect misconfigurations in Terraform, Kubernetes, CloudFormation, and Docker", "category": "security" }
+    ]
+  },
   "christophacham-agent-skills-library": {
     "description": "Curated library of 2,622 agent skills consolidated from 48 sources across 34 categories",
     "latest": "main",

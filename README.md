@@ -201,7 +201,7 @@ Global installs require `--agent <name>` or `AGS_AGENT` env var.
 
 ## Default registry
 
-Eight curated packages are built-in — nothing to configure to get started:
+Nine curated packages are built-in — nothing to configure to get started:
 
 | Package | Skills | Description |
 |---------|--------|-------------|
@@ -212,6 +212,7 @@ Eight curated packages are built-in — nothing to configure to get started:
 | `microsoft-skills` | 174 | Azure SDK and AI Foundry development |
 | `flitzrrr-agent-skills` | 504 | Curated from 19 verified sources |
 | `newmindsgroup-ai-agent-skills-library` | 1,513 | With brand-config.yml and starter packs |
+| `superagent-skills` | 12 | Security skills — hacker, recon, supply-chain, crypto, infra, and more |
 | `christophacham-agent-skills-library` | 2,622 | Consolidated from 48 sources across 34 categories |
 
 Add more sources with `asm source add` to extend beyond the defaults.
