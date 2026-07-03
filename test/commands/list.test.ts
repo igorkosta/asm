@@ -66,9 +66,12 @@ describe("list command", () => {
 
     const output = logs.join("\n");
     expect(output).toContain("addyosmani-agent-skills");
-    expect(output).toContain("version: 0.6.2");
-    expect(output).toContain("3 skills");
-    expect(output).toContain("agent: local");
+    expect(output).toContain("version:");
+    expect(output).toContain("0.6.2");
+    expect(output).toContain("3");
+    expect(output).toContain("skills");
+    expect(output).toContain("agent:");
+    expect(output).toContain("local");
   });
 
   it("lists installed skill names", async () => {

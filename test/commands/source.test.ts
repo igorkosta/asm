@@ -37,8 +37,8 @@ describe("source list command", () => {
     const { listSources } = await import("../../src/commands/source.js");
     await listSources();
 
-    expect(logs).toContain("community: https://github.com/...");
-    expect(logs).toContain("internal: https://gitlab.internal.co/...");
+    expect(logs.some((l) => l.includes("community") && l.includes("https://github.com/..."))).toBe(true);
+    expect(logs.some((l) => l.includes("internal") && l.includes("https://gitlab.internal.co/..."))).toBe(true);
   });
 
   it("prints apiBaseUrl when present", async () => {

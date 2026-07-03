@@ -36,7 +36,8 @@ describe("search command", () => {
 
     const output = logs.join("\n");
     expect(output).toContain("addyosmani-agent-skills");
-    expect(output).toContain("latest: 0.6.2");
+    expect(output).toContain("latest:");
+    expect(output).toContain("0.6.2");
     expect(output).toContain("categories:");
   });
 

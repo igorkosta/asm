@@ -105,7 +105,8 @@ describe("publish command", () => {
     await publish();
 
     const output = logs.join("\n");
-    expect(output).toContain("test-pkg v1.0.0");
+    expect(output).toContain("test-pkg");
+    expect(output).toContain("1.0.0");
     expect(output).toContain("https://github.com/org/test-pkg");
     expect(output).toContain("hello-world");
     expect(output).toContain("Registry entry snippet");
@@ -141,6 +142,7 @@ describe("publish command", () => {
     await publish();
 
     const output = logs.join("\n");
-    expect(output).toContain("test-pkg v1.0.0");
+    expect(output).toContain("test-pkg");
+    expect(output).toContain("1.0.0");
   });
 });

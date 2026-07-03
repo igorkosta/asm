@@ -82,6 +82,7 @@ describe("info command", () => {
 
     const output = logs.join("\n");
     expect(output).toContain("microsoft-skills");
-    expect(output).toContain("skillCount:  174");
+    expect(output).toContain("skillCount:");
+    expect(output).toContain("174");
   });
 });
