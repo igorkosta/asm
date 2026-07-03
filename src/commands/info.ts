@@ -1,3 +1,4 @@
+import { fmt } from "../utils/format.js";
 import type { RegistryEntry, SkillEntry } from "../types/index.js";
 
 function categoriesSummary(skills: SkillEntry[]): string {
@@ -12,26 +13,26 @@ function categoriesSummary(skills: SkillEntry[]): string {
 
 function showPackage(pkgName: string, entry: RegistryEntry): void {
   const lines: string[] = [];
-  lines.push(`${pkgName}`);
+  lines.push(`${fmt.heading(pkgName)}`);
   lines.push(``);
-  lines.push(`  ${entry.description}`);
+  lines.push(`  ${fmt.dim(entry.description)}`);
   lines.push(``);
-  lines.push(`  latest:      ${entry.latest}`);
-  lines.push(`  repository:  ${entry.repository}`);
-  lines.push(`  platforms:   ${entry.platforms.join(", ")}`);
+  lines.push(`  ${fmt.dim("latest:")}      ${fmt.version(entry.latest)}`);
+  lines.push(`  ${fmt.dim("repository:")}  ${fmt.dim(entry.repository)}`);
+  lines.push(`  ${fmt.dim("platforms:")}   ${fmt.dim(entry.platforms.join(", "))}`);
   lines.push(``);
 
   if (entry.skills && entry.skills.length > 0) {
-    lines.push(`  categories:  ${categoriesSummary(entry.skills)}`);
+    lines.push(`  ${fmt.dim("categories:")}  ${fmt.dim(categoriesSummary(entry.skills))}`);
     lines.push(``);
-    lines.push(`  skills:`);
+    lines.push(`  ${fmt.bold("skills:")}`);
     for (const skill of entry.skills) {
       const tag = skill.category ?? "";
       const desc = skill.description ?? "";
-      lines.push(`    ${skill.name.padEnd(36)} ${tag.padEnd(12)} ${desc}`);
+      lines.push(`    ${fmt.bold(skill.name.padEnd(36))} ${fmt.dim(tag.padEnd(12))} ${fmt.dim(desc)}`);
     }
   } else if (entry.skillCount !== undefined) {
-    lines.push(`  skillCount:  ${entry.skillCount}`);
+    lines.push(`  ${fmt.dim("skillCount:")}  ${fmt.bold(String(entry.skillCount))}`);
   }
 
   console.log(lines.join("\n"));
@@ -43,16 +44,16 @@ function showSkill(entry: RegistryEntry, pkgName: string, skillName: string): vo
   );
 
   if (!skill) {
-    console.error(`Skill '${skillName}' not found in package '${pkgName}'.`);
+    console.error(fmt.error(`Skill ${fmt.pkg(skillName)} not found in package ${fmt.pkg(pkgName)}.`));
     process.exit(1);
   }
 
   const lines: string[] = [];
-  lines.push(`${skill.name}`);
-  lines.push(`  Package:     ${pkgName}`);
-  lines.push(`  Category:    ${skill.category ?? "(none)"}`);
+  lines.push(`${fmt.heading(skill.name)}`);
+  lines.push(`  ${fmt.dim("Package:")}     ${fmt.pkg(pkgName)}`);
+  lines.push(`  ${fmt.dim("Category:")}    ${fmt.dim(skill.category ?? "(none)")}`);
   if (skill.description) {
-    lines.push(`  Description: ${skill.description}`);
+    lines.push(`  ${fmt.dim("Description:")} ${fmt.dim(skill.description)}`);
   }
   console.log(lines.join("\n"));
 }
@@ -70,7 +71,7 @@ export async function info(pkgSpec: string): Promise<void> {
 
   const entry = index[pkgName];
   if (!entry) {
-    console.error(`Package '${pkgName}' not found in registry.`);
+    console.error(fmt.error(`Package ${fmt.pkg(pkgName)} not found in registry.`));
     process.exit(1);
   }
 

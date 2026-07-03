@@ -1,11 +1,12 @@
 import { existsSync, rmSync } from "fs";
 import { join } from "path";
+import { fmt } from "../utils/format.js";
 import { removeFromLockfile, addToLockfile, readLockfile } from "./lockfile.js";
 import type { LockfileEntry } from "../types/index.js";
 
 export function uninstallPackage(pkgName: string, dest: string): void {
   if (!existsSync(dest)) {
-    console.log(`Package '${pkgName}' is not installed.`);
+    console.log(fmt.warning(`Package ${fmt.pkg(pkgName)} is not installed.`));
     return;
   }
   rmSync(dest, { recursive: true, force: true });
@@ -19,7 +20,7 @@ export function uninstallSkill(
 ): void {
   const skillDir = join(dest, "skills", skillName);
   if (!existsSync(skillDir)) {
-    console.log(`Skill '${skillName}' not found in package '${pkgName}'.`);
+    console.log(fmt.warning(`Skill ${fmt.pkg(skillName)} not found in package ${fmt.pkg(pkgName)}.`));
     return;
   }
   rmSync(skillDir, { recursive: true, force: true });

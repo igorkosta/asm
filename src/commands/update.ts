@@ -1,3 +1,4 @@
+import { fmt } from "../utils/format.js";
 import type { LockfileEntry } from "../types/index.js";
 
 async function updateOne(
@@ -12,7 +13,7 @@ async function updateOne(
   const lockfile = readLockfile(rootDir);
   const current = lockfile.packages[pkgName];
   if (!current) {
-    console.error(`Package '${pkgName}' is not installed.`);
+    console.error(fmt.error(`Package ${fmt.pkg(pkgName)} is not installed.`));
     return;
   }
 
@@ -23,17 +24,17 @@ async function updateOne(
   const entry = index[pkgName];
 
   if (!entry) {
-    console.error(`Package '${pkgName}' not found in registry.`);
+    console.error(fmt.error(`Package ${fmt.pkg(pkgName)} not found in registry.`));
     return;
   }
 
   if (entry.latest === current.version) {
-    console.log(`'${pkgName}' is already at latest version ${entry.latest}.`);
+    console.log(`${fmt.pkg(pkgName)} is already at latest version ${fmt.version(entry.latest)}.`);
     return;
   }
 
   const dest = resolvePackageDir(pkgName, options);
-  console.log(`Updating '${pkgName}' (${current.version} → ${entry.latest})...`);
+  console.log(`Updating ${fmt.pkg(pkgName)} (${fmt.version(current.version)} ${fmt.arrow} ${fmt.version(entry.latest)})...`);
 
   const { integrity, resolved } = await installPackage(pkgName, entry, dest);
 
@@ -47,10 +48,8 @@ async function updateOne(
 
   addToLockfile(rootDir, pkgName, updated);
 
-  const counts = entry.skills
-    ? `${entry.skills.length} skills`
-    : `${entry.skillCount ?? "?"} skills`;
-  console.log(`Updated '${pkgName}' (${counts})`);
+  const count = entry.skills ? entry.skills.length : (entry.skillCount ?? "?");
+  console.log(fmt.success(`Updated ${fmt.pkg(pkgName)} (${fmt.bold(String(count))} skills)`));
 }
 
 export async function update(
@@ -67,7 +66,7 @@ export async function update(
   const packages = Object.keys(lockfile.packages);
 
   if (packages.length === 0) {
-    console.log("No packages installed.");
+    console.log(fmt.dim("No packages installed."));
     return;
   }
 

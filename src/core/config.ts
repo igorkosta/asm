@@ -1,6 +1,7 @@
 import { existsSync, readdirSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import { homedir } from "os";
 import { join } from "path";
+import { fmt } from "../utils/format.js";
 import type { Source, AgsConfig } from "../types/index.js";
 
 export function configDir(): string {
@@ -63,14 +64,10 @@ export function resolveAgent(cliAgent?: string): string {
 
   if (installed.length === 1) return installed[0];
   if (installed.length === 0) {
-    console.error(
-      "No agent detected. Use --agent <name> or set AGS_AGENT.",
-    );
+    console.error(fmt.error("No agent detected. Use --agent <name> or set AGS_AGENT."));
     process.exit(1);
   }
-  console.error(
-    `Multiple agents detected (${installed.join(", ")}). Use --agent <name> to specify.`,
-  );
+  console.error(fmt.error(`Multiple agents detected (${installed.join(", ")}). Use --agent <name> to specify.`));
   process.exit(1);
 }
 

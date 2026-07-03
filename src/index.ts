@@ -1,13 +1,18 @@
 #!/usr/bin/env node
 
+import { readFileSync } from "fs";
 import { Command } from "commander";
+
+const pkg = JSON.parse(
+  readFileSync(new URL("../package.json", import.meta.url), "utf-8"),
+);
 
 const program = new Command();
 
 program
-  .name("ags")
+  .name("asm")
   .description("Agent Skills Manager — install, update, and manage AI agent skills")
-  .version("0.1.0");
+  .version(pkg.version);
 
 program
   .command("install <pkg>")

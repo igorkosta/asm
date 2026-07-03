@@ -1,3 +1,4 @@
+import { fmt } from "../utils/format.js";
 import type { RegistryEntry, SkillEntry } from "../types/index.js";
 
 function categoriesSummary(skills: SkillEntry[]): string {
@@ -30,27 +31,25 @@ export async function search(query: string): Promise<void> {
   const results = searchRegistry(index, query);
 
   if (results.length === 0) {
-    console.log(`No packages found matching '${query}'.`);
+    console.log(fmt.dim(`No packages found matching '${query}'.`));
     return;
   }
 
   const lines: string[] = [];
   for (const { name, entry } of results) {
-    const counts = entry.skills
-      ? `${entry.skills.length} skills`
-      : `${entry.skillCount ?? "?"} skills`;
-    lines.push(`${name}`);
-    lines.push(`  ${entry.description}`);
-    lines.push(`  latest: ${entry.latest}  |  ${counts}  |  platforms: ${entry.platforms.join(", ")}`);
+    const count = entry.skills ? entry.skills.length : (entry.skillCount ?? "?");
+    lines.push(`${fmt.heading(name)}`);
+    lines.push(`  ${fmt.dim(entry.description)}`);
+    lines.push(`  latest: ${fmt.version(entry.latest)}  |  ${fmt.bold(String(count))} skills  |  platforms: ${fmt.dim(entry.platforms.join(", "))}`);
     if (entry.skills && entry.skills.length > 0) {
-      lines.push(`  categories: ${categoriesSummary(entry.skills)}`);
+      lines.push(`  categories: ${fmt.dim(categoriesSummary(entry.skills))}`);
 
       const matched = matchingSkills(entry.skills, query);
       if (matched.length > 0) {
         for (const skill of matched) {
           const tag = skill.category ? ` (${skill.category})` : "";
           const desc = skill.description ?? "";
-          lines.push(`    ${skill.name}${tag}  ${desc}`);
+          lines.push(`    ${fmt.bold(skill.name)}${fmt.dim(tag)}  ${fmt.dim(desc)}`);
         }
       }
     }

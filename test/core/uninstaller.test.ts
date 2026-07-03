@@ -35,7 +35,7 @@ describe("uninstallPackage", () => {
     const { uninstallPackage } = await import("../../src/core/uninstaller.js");
     uninstallPackage("nonexistent", join(tmpDir, "nonexistent"));
 
-    expect(logs).toContain("Package 'nonexistent' is not installed.");
+    expect(logs.some((l) => l.includes("nonexistent") && l.includes("not installed"))).toBe(true);
   });
 });
 
@@ -91,6 +91,6 @@ describe("uninstallSkill", () => {
     const { uninstallSkill } = await import("../../src/core/uninstaller.js");
     uninstallSkill("owasp", "nonexistent", pkgDir, tmpDir);
 
-    expect(logs).toContain("Skill 'nonexistent' not found in package 'owasp'.");
+    expect(logs.some((l) => l.includes("nonexistent") && l.includes("not found in package"))).toBe(true);
   });
 });

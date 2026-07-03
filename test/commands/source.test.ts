@@ -63,7 +63,7 @@ describe("source add command", () => {
     const { addSource } = await import("../../src/commands/source.js");
     await addSource("community", "https://github.com/...");
 
-    expect(logs).toEqual(["Source 'community' added."]);
+    expect(logs.some((l) => l.includes("community") && l.includes("added"))).toBe(true);
 
     const { listSources } = await import("../../src/core/config.js");
     expect(listSources()).toHaveLength(1);
@@ -93,7 +93,7 @@ describe("source remove command", () => {
     const { removeSource } = await import("../../src/commands/source.js");
     await removeSource("community");
 
-    expect(logs).toEqual(["Source 'community' removed."]);
+    expect(logs.some((l) => l.includes("community") && l.includes("removed"))).toBe(true);
 
     const { listSources } = await import("../../src/core/config.js");
     expect(listSources()).toHaveLength(0);

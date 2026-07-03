@@ -72,7 +72,7 @@ describe("uninstall command", () => {
     const { uninstall } = await import("../../src/commands/uninstall.js");
     await uninstall("addyosmani-agent-skills", {});
 
-    expect(logs).toContain("Removed package 'addyosmani-agent-skills'.");
+    expect(logs.some((l) => l.includes("Removed") && l.includes("addyosmani-agent-skills"))).toBe(true);
   });
 
   it("supports pkg/skill format", async () => {
@@ -100,7 +100,7 @@ describe("uninstall command", () => {
       process.cwd(),
     );
 
-    expect(logs).toContain("Removed skill 'using-agent-skills' from package 'addyosmani-agent-skills'.");
+    expect(logs.some((l) => l.includes("Removed") && l.includes("using-agent-skills") && l.includes("addyosmani-agent-skills"))).toBe(true);
   });
 
   it("cleans .gitignore when last local package is removed", async () => {

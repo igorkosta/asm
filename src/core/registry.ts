@@ -1,3 +1,4 @@
+import { fmt } from "../utils/format.js";
 import type { Source, RegistryIndex, RegistryEntry, SkillEntry } from "../types/index.js";
 import defaultRegistry from "../registry/default-registry.json";
 
@@ -13,7 +14,7 @@ export async function fetchRegistry(sources: Source[]): Promise<RegistryIndex> {
       const res = await fetch(source.indexUrl);
 
       if (!res.ok) {
-        console.error(`Warning: source "${source.name}" returned ${res.status} — skipping`);
+        console.error(fmt.warning(`Warning: source "${fmt.pkg(source.name)}" returned ${res.status} — skipping`));
         continue;
       }
 
@@ -24,12 +25,12 @@ export async function fetchRegistry(sources: Source[]): Promise<RegistryIndex> {
       }
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
-      console.error(`Warning: failed to fetch source "${source.name}": ${msg} — skipping`);
+      console.error(fmt.warning(`Warning: failed to fetch source "${fmt.pkg(source.name)}": ${msg} — skipping`));
     }
   }
 
   if (Object.keys(merged).length === 0) {
-    console.error("Warning: no sources could be fetched — falling back to default registry");
+    console.error(fmt.warning("Warning: no sources could be fetched — falling back to default registry"));
     return defaultRegistry as RegistryIndex;
   }
 

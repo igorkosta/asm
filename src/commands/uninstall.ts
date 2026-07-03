@@ -1,3 +1,5 @@
+import { fmt } from "../utils/format.js";
+
 export async function uninstall(
   pkgSpec: string,
   options: { global?: boolean; agent?: string },
@@ -9,19 +11,16 @@ export async function uninstall(
 
   const slashIdx = pkgSpec.indexOf("/");
   const rootDir = process.cwd();
+  const pkgName = slashIdx >= 0 ? pkgSpec.slice(0, slashIdx) : pkgSpec;
+  const dest = resolvePackageDir(pkgName, options);
 
   if (slashIdx >= 0) {
-    const pkgName = pkgSpec.slice(0, slashIdx);
     const skillName = pkgSpec.slice(slashIdx + 1);
-    const dest = resolvePackageDir(pkgName, options);
 
     uninstallSkill(pkgName, skillName, dest, rootDir);
 
-    console.log(`Removed skill '${skillName}' from package '${pkgName}'.`);
+    console.log(fmt.success(`Removed skill ${fmt.pkg(skillName)} from package ${fmt.pkg(pkgName)}.`));
   } else {
-    const pkgName = pkgSpec;
-    const dest = resolvePackageDir(pkgName, options);
-
     uninstallPackage(pkgName, dest);
     removeFromLockfile(rootDir, pkgName);
 
@@ -32,6 +31,6 @@ export async function uninstall(
       }
     }
 
-    console.log(`Removed package '${pkgName}'.`);
+    console.log(fmt.success(`Removed package ${fmt.pkg(pkgName)}.`));
   }
 }

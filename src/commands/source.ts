@@ -1,16 +1,17 @@
+import { fmt } from "../utils/format.js";
 import type { Source } from "../types/index.js";
 
 export async function listSources(): Promise<void> {
   const { listSources: getSources } = await import("../core/config.js");
   const sources = getSources();
   if (sources.length === 0) {
-    console.log("No sources configured.");
+    console.log(fmt.dim("No sources configured."));
     return;
   }
   for (const src of sources) {
-    console.log(`${src.name}: ${src.indexUrl}`);
+    console.log(`${fmt.bold(src.name)}: ${fmt.dim(src.indexUrl)}`);
     if (src.apiBaseUrl) {
-      console.log(`  apiBaseUrl: ${src.apiBaseUrl}`);
+      console.log(`  ${fmt.dim("apiBaseUrl:")} ${fmt.dim(src.apiBaseUrl)}`);
     }
   }
 }
@@ -20,11 +21,11 @@ export async function addSource(name: string, indexUrl: string, options?: { apiB
   const source: Source = { name, indexUrl };
   if (options?.apiBaseUrl) source.apiBaseUrl = options.apiBaseUrl;
   add(source);
-  console.log(`Source '${name}' added.`);
+  console.log(fmt.success(`Source ${fmt.pkg(name)} added.`));
 }
 
 export async function removeSource(name: string): Promise<void> {
   const { removeSource: remove } = await import("../core/config.js");
   remove(name);
-  console.log(`Source '${name}' removed.`);
+  console.log(fmt.success(`Source ${fmt.pkg(name)} removed.`));
 }

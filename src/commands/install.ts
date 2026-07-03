@@ -1,3 +1,4 @@
+import { fmt } from "../utils/format.js";
 import type { LockfileEntry } from "../types/index.js";
 
 export async function install(
@@ -18,14 +19,14 @@ export async function install(
   const entry = index[pkgName];
 
   if (!entry) {
-    console.error(`Package '${pkgName}' not found in registry.`);
+    console.error(fmt.error(`Package ${fmt.pkg(pkgName)} not found in registry.`));
     process.exit(1);
   }
 
   const dest = resolvePackageDir(pkgName, options);
   const agent = options.global ? (options.agent ?? process.env.AGS_AGENT ?? "opencode") : "local";
 
-  console.log(`Installing '${pkgName}' (${entry.latest})...`);
+  console.log(`Installing ${fmt.pkg(pkgName)} (${fmt.version(entry.latest)})...`);
 
   const { integrity, resolved } = await installPackage(pkgName, entry, dest);
 
@@ -44,8 +45,6 @@ export async function install(
     ensureGitignore(rootDir);
   }
 
-  const counts = entry.skills
-    ? `${entry.skills.length} skills`
-    : `${entry.skillCount ?? "?"} skills`;
-  console.log(`Installed '${pkgName}' (${counts})`);
+  const count = entry.skills ? entry.skills.length : (entry.skillCount ?? "?");
+  console.log(fmt.success(`Installed ${fmt.pkg(pkgName)} (${fmt.bold(String(count))} skills)`));
 }

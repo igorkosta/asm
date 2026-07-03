@@ -2,6 +2,7 @@ import { existsSync, mkdirSync, writeFileSync } from "fs";
 import { join } from "path";
 import { createInterface } from "readline";
 import { basename } from "path";
+import { fmt } from "../utils/format.js";
 import type { PackageManifest, SkillManifest } from "../types/index.js";
 
 function prompt(query: string, defaultValue?: string): Promise<string> {
@@ -26,7 +27,7 @@ async function promptRequired(query: string, defaultValue?: string): Promise<str
           rl.close();
           resolve(val);
         } else {
-          console.log("This field is required.");
+          console.log(fmt.error("This field is required."));
           ask();
         }
       });
@@ -40,7 +41,7 @@ export async function init(pkgName?: string, options?: { description?: string; v
   const manifestPath = join(cwd, "ags.json");
 
   if (existsSync(manifestPath)) {
-    console.error("ags.json already exists in this directory.");
+    console.error(fmt.error("ags.json already exists in this directory."));
     process.exit(1);
   }
 
@@ -88,11 +89,11 @@ Describe how agents should use this skill here.
 
   writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + "\n");
 
-  console.log(`Created ${manifestPath}`);
-  console.log(`Created ${join("skills", "hello-world.md")}`);
+  console.log(fmt.success(`Created ${fmt.dim(manifestPath)}`));
+  console.log(fmt.success(`Created ${fmt.dim(join("skills", "hello-world.md"))}`));
   console.log();
-  console.log("Next steps:");
-  console.log("  1. Add your skill files to the skills/ directory");
-  console.log("  2. Update ags.json with your skills list");
-  console.log("  3. Run 'ags publish' to validate and output registry entry");
+  console.log(fmt.bold("Next steps:"));
+  console.log(fmt.dim("  1. Add your skill files to the skills/ directory"));
+  console.log(fmt.dim("  2. Update ags.json with your skills list"));
+  console.log(fmt.dim("  3. Run 'ags publish' to validate and output registry entry"));
 }

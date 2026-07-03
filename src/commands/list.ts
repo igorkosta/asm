@@ -1,3 +1,5 @@
+import { fmt } from "../utils/format.js";
+
 export async function list(
   options: { global?: boolean; agent?: string },
 ): Promise<void> {
@@ -8,7 +10,7 @@ export async function list(
   const entries = Object.entries(lockfile.packages);
 
   if (entries.length === 0) {
-    console.log("No packages installed.");
+    console.log(fmt.dim("No packages installed."));
     return;
   }
 
@@ -18,7 +20,7 @@ export async function list(
 
   if (filtered.length === 0) {
     const suffix = options.agent ? ` for agent '${options.agent}'` : "";
-    console.log(`No packages installed${suffix}.`);
+    console.log(fmt.dim(`No packages installed${suffix}.`));
     return;
   }
 
@@ -26,10 +28,10 @@ export async function list(
   for (const [name, entry] of filtered) {
     const skillCount = entry.skills.length;
     const suffix = options.global ? `  [global: ${entry.agent}]` : "";
-    lines.push(`${name}${suffix}`);
-    lines.push(`  version: ${entry.version}  |  ${skillCount} skills  |  agent: ${entry.agent}`);
+    lines.push(`${fmt.heading(name)}${suffix}`);
+    lines.push(`  version: ${fmt.version(entry.version)}  |  ${fmt.bold(String(skillCount))} skills  |  agent: ${fmt.dim(entry.agent)}`);
     if (entry.skills.length > 0) {
-      lines.push(`  skills: ${entry.skills.join(", ")}`);
+      lines.push(`  skills: ${fmt.dim(entry.skills.join(", "))}`);
     }
     lines.push("");
   }

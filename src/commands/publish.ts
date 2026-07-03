@@ -1,5 +1,6 @@
 import { existsSync, readFileSync } from "fs";
 import { join } from "path";
+import { fmt } from "../utils/format.js";
 import type { PackageManifest, RegistryEntry } from "../types/index.js";
 
 interface ValidationError {
@@ -67,8 +68,8 @@ export async function publish(): Promise<void> {
   const manifestPath = join(cwd, "ags.json");
 
   if (!existsSync(manifestPath)) {
-    console.error("No ags.json found in the current directory.");
-    console.error("Run 'ags init' to create one.");
+    console.error(fmt.error("No ags.json found in the current directory."));
+    console.error(fmt.dim("Run 'ags init' to create one."));
     process.exit(1);
   }
 
@@ -76,16 +77,16 @@ export async function publish(): Promise<void> {
   try {
     raw = JSON.parse(readFileSync(manifestPath, "utf-8"));
   } catch (err) {
-    console.error("Failed to parse ags.json:", err instanceof Error ? err.message : String(err));
+    console.error(fmt.error("Failed to parse ags.json:"), err instanceof Error ? err.message : String(err));
     process.exit(1);
   }
 
   const { errors, manifest } = validateManifest(raw);
 
   if (errors.length > 0) {
-    console.error("Validation errors in ags.json:");
+    console.error(fmt.error("Validation errors in ags.json:"));
     for (const err of errors) {
-      console.error(`  ${err.field}: ${err.message}`);
+      console.error(`  ${fmt.bold(err.field)}: ${fmt.dim(err.message)}`);
     }
     process.exit(1);
   }
@@ -102,19 +103,19 @@ export async function publish(): Promise<void> {
   }
 
   if (missing.length > 0) {
-    console.error("Missing skill entry files:");
+    console.error(fmt.error("Missing skill entry files:"));
     for (const f of missing) {
-      console.error(`  ${f}`);
+      console.error(`  ${fmt.dim(f)}`);
     }
     process.exit(1);
   }
 
-  console.log(`✓ ${m.name} v${m.version} — ${m.description}`);
-  console.log(`  repository: ${m.repository}`);
-  console.log(`  platforms: ${m.platforms.join(", ")}`);
-  console.log(`  skills: ${m.skills.map((s) => s.name).join(", ")}`);
+  console.log(`${fmt.check} ${fmt.bold(m.name)} v${fmt.version(m.version)} ${fmt.dim("—")} ${fmt.dim(m.description)}`);
+  console.log(`  ${fmt.dim("repository:")} ${fmt.dim(m.repository)}`);
+  console.log(`  ${fmt.dim("platforms:")} ${fmt.dim(m.platforms.join(", "))}`);
+  console.log(`  ${fmt.dim("skills:")} ${m.skills.map((s) => fmt.bold(s.name)).join(fmt.dim(", "))}`);
   console.log();
-  console.log("Registry entry snippet (add this to a registry.json source):");
+  console.log(fmt.heading("Registry entry snippet (add this to a registry.json source):"));
   console.log();
 
   const entry: RegistryEntry = {
@@ -131,7 +132,7 @@ export async function publish(): Promise<void> {
   const snippet = JSON.stringify({ [m.name]: entry }, null, 2);
   console.log(snippet);
   console.log();
-  console.log("To make this package available, add the entry above to your");
-  console.log("registry index and publish it at a URL, then run:");
-  console.log(`  ags source add my-source <index-url>`);
+  console.log(fmt.dim("To make this package available, add the entry above to your"));
+  console.log(fmt.dim("registry index and publish it at a URL, then run:"));
+  console.log(fmt.dim("  ags source add my-source <index-url>"));
 }

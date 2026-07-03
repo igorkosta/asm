@@ -27,7 +27,7 @@ describe("info command", () => {
     const { info } = await import("../../src/commands/info.js");
     await expect(info("nonexistent-pkg")).rejects.toThrow("process.exit");
 
-    expect(logs).toContain("Package 'nonexistent-pkg' not found in registry.");
+    expect(logs.some((l) => l.includes("nonexistent-pkg") && l.includes("not found"))).toBe(true);
   });
 
   it("shows package metadata", async () => {
@@ -70,7 +70,7 @@ describe("info command", () => {
     const { info } = await import("../../src/commands/info.js");
     await expect(info("addyosmani-agent-skills/nonexistent-skill")).rejects.toThrow("process.exit");
 
-    expect(logs).toContain("Skill 'nonexistent-skill' not found in package 'addyosmani-agent-skills'.");
+    expect(logs.some((l) => l.includes("nonexistent-skill") && l.includes("not found"))).toBe(true);
   });
 
   it("shows skillCount for aggregator packages", async () => {

@@ -38,7 +38,7 @@ describe("install command", () => {
     const { install } = await import("../../src/commands/install.js");
     await expect(install("nonexistent-pkg", {})).rejects.toThrow("process.exit");
 
-    expect(logs).toContain("Package 'nonexistent-pkg' not found in registry.");
+    expect(logs.some((l) => l.includes("nonexistent-pkg") && l.includes("not found"))).toBe(true);
   });
 
   it("prints progress messages on success", async () => {
@@ -49,8 +49,8 @@ describe("install command", () => {
     const { install } = await import("../../src/commands/install.js");
     await install("addyosmani-agent-skills", {});
 
-    expect(logs.some((l) => l.startsWith("Installing '"))).toBe(true);
-    expect(logs.some((l) => l.startsWith("Installed '"))).toBe(true);
+    expect(logs.some((l) => l.startsWith("Installing "))).toBe(true);
+    expect(logs.some((l) => l.includes("Installed "))).toBe(true);
   });
 
   it("creates lockfile entry after install", async () => {

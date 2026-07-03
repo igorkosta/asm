@@ -87,7 +87,7 @@ describe("update command", () => {
     const { update } = await import("../../src/commands/update.js");
     await update("not-installed-pkg", {});
 
-    expect(logs).toContain("Package 'not-installed-pkg' is not installed.");
+    expect(logs.some((l) => l.includes("not-installed-pkg") && l.includes("not installed"))).toBe(true);
   });
 
   it("updates all packages when no package specified", async () => {
