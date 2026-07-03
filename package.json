@@ -1,6 +1,6 @@
 {
   "name": "@igorkosta/asm",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Agent Skills Manager — install, update, and manage AI agent skills",
   "repository": {
     "type": "git",
