@@ -1,6 +1,6 @@
 import { fmt } from "../utils/format.js";
 import type { Source, RegistryIndex, RegistryEntry, SkillEntry } from "../types/index.js";
-import defaultRegistry from "../registry/default-registry.json";
+import defaultRegistry from "../registry/default-registry.json" with { type: "json" };
 
 export async function fetchRegistry(sources: Source[]): Promise<RegistryIndex> {
   if (sources.length === 0) {
